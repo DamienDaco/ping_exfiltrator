@@ -81,9 +81,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.text_browser.setTextCursor(self.cursor)
         self.text_browser.ensureCursorVisible()
 
-    def __del__(self):                                      # Restore normal output
-        # Restore sys.stdout
-        sys.stdout = self.original_stdout
+    # def __del__(self):                                      # Restore normal output
+    #     # Restore sys.stdout
+    #     sys.stdout = self.original_stdout
 
 
 if __name__ == "__main__":
