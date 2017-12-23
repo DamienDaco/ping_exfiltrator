@@ -6,6 +6,7 @@ except:
     exit()
 
 from ui.design_ping_exfiltrator import Ui_MainWindow
+from app.logic import *
 import sys
 
 
@@ -15,6 +16,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super().__init__()
 
         self.setupUi(self)
+        self.interface_box.addItems(get_interfaces())
+        self.selected_interface = str(self.interface_box.currentText())
+        self.string_ip = self.ip_line.placeholderText()
+        print("IP is %s" % self.string_ip)
+        print(type(self.string_ip))
+
+        self.logic = Logic(self.string_ip, self.selected_interface)
+        self.ip_line.editingFinished.connect(self.process_ip)
+
+    def process_ip(self):
+
+        if self.ip_line.text():
+            self.logic.binary_ip = clean_ip(self.ip_line.text())
+            print("IP changed to %s " % self.ip_line.text())
+        elif self.ip_line.placeholderText():
+            self.logic.binary = clean_ip(self.ip_line.placeholderText())
+            print("IP changed to %s " % self.ip_line.placeholderText())
 
 
 if __name__ == "__main__":

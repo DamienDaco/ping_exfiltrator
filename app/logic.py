@@ -1,13 +1,15 @@
 from app.multithreading import *
 from app.network_functions import *
 
+
 class Logic:
 
-    def __init__(self, selected_interface):
+    def __init__(self, string_ip, selected_interface):
         super().__init__()
         print("Logic has been initialized")
         self.threads = []                   # List for storing multiple threads
         self.identities = 0                # List of workers identities (numbers)
+        self.binary_ip = clean_ip(string_ip)
         self.interfaces = get_interfaces()
         self.selected_interface = selected_interface
 
@@ -26,3 +28,4 @@ class Logic:
 
         self.threads = []                       # When done, reset list
         self.identities = 0
+
