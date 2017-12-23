@@ -21,11 +21,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.string_ip = self.ip_line.placeholderText()
         print("IP is %s" % self.string_ip)
         print(type(self.string_ip))
+        self.sender_button.toggle()
 
         self.logic = Logic(self.string_ip, self.selected_interface)
         self.ip_line.editingFinished.connect(self.process_ip)
         self.start_button.clicked.connect(self.logic.start_thread)
         self.stop_button.clicked.connect(self.logic.stop_thread)
+
+        self.sender_button.toggled.connect(self.button_toggled)
 
     def process_ip(self):
 
@@ -36,6 +39,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.logic.binary = clean_ip(self.ip_line.placeholderText())
             print("IP changed to %s " % self.ip_line.placeholderText())
 
+    def button_toggled(self):
+
+        if self.sender_button.isChecked():
+            print("Sender mode enabled")
+            self.start_button.setDisabled(False)
+            self.stop_button.setDisabled(False)
+            self.ip_line.setDisabled(False)
+
+        elif self.receiver_button.isChecked():
+            print("Receiver mode enabled")
+            self.start_button.setDisabled(True)
+            self.stop_button.setDisabled(True)
+            self.ip_line.setDisabled(True)
 
 if __name__ == "__main__":
 
