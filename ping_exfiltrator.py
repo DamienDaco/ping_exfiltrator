@@ -10,12 +10,32 @@ from app.logic import *
 import sys
 
 
+class EmittingStream(QObject):
+
+    text_written = pyqtSignal(str)
+
+    def write(self, text):
+        self.text_written.emit(str(text))
+
+    def flush(self):
+        pass
+
+'''
+I was forced to implement the flush method because of a bug when exiting the program.
+This didn't happen before in PyQt4. I don't know why PyQt5 behaves like that.
+'''
+
+
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
+
+        self.original_stdout = sys.stdout
+        sys.stdout = EmittingStream(text_written=self.normal_output_written)
+
         self.interface_box.addItems(get_interfaces())
         self.selected_interface = str(self.interface_box.currentText())
         self.string_ip = self.ip_line.placeholderText()
@@ -52,6 +72,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.start_button.setDisabled(True)
             self.stop_button.setDisabled(True)
             self.ip_line.setDisabled(True)
+
+    def normal_output_written(self, text):                  # Manage output to window
+
+        self.cursor = self.text_browser.textCursor()             # These methods allow output without newlines. Better than append.
+        self.cursor.movePosition(self.cursor.End)
+        self.cursor.insertText(text)
+        self.text_browser.setTextCursor(self.cursor)
+        self.text_browser.ensureCursorVisible()
+
+    def __del__(self):                                      # Restore normal output
+        # Restore sys.stdout
+        sys.stdout = self.original_stdout
+
 
 if __name__ == "__main__":
 
