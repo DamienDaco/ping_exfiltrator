@@ -10,12 +10,12 @@ class Logic:
         self.threads = []                   # List for storing multiple threads
         self.identities = 0                # List of workers identities (numbers)
         self.binary_ip = clean_ip(string_ip)
-        self.interfaces = get_interfaces()
+        self.rate = 1
         self.selected_interface = selected_interface
 
     def start_thread(self):
 
-        thread = MultiThreading(self.identities, self.selected_interface)
+        thread = MultiThreading(self.binary_ip, self.identities, self.rate, self.selected_interface)
         thread.start_thread()
         self.threads.append(thread)
         self.identities += 1

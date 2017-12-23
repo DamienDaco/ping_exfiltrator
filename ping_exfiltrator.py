@@ -24,6 +24,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.logic = Logic(self.string_ip, self.selected_interface)
         self.ip_line.editingFinished.connect(self.process_ip)
+        self.start_button.clicked.connect(self.logic.start_thread)
+        self.stop_button.clicked.connect(self.logic.stop_thread)
 
     def process_ip(self):
 
